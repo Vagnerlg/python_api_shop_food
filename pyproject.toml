@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "shop_food"
+version = "0.1.0"
+description = ""
+authors = ["Vagner Goncalves <vlgonalves@gmail.com>"]
+readme = "README.md"
+packages = [{include = "shop_food"}]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+pydantic = "^1.10.2"
+pymongo = "^4.3.2"
+python-dotenv = "^0.21.0"
+flask = "^2.2.2"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
