@@ -1,4 +1,4 @@
-from typing import Optional, List, Any
+from typing import Optional, List
 from bson import ObjectId
 from shop_food.infra.database.base_model import BaseModel
 from shop_food.infra.database.util_model import UtilModel
@@ -11,6 +11,7 @@ class AbstractRepository(UtilModel):
         items = []
         for item in self.get_collection().find():
             item['id'] = str(item['_id'])
+            item = self.embed(item)
             items.append(self.model(**item))
 
         return items
@@ -52,3 +53,14 @@ class AbstractRepository(UtilModel):
         if 0 < result.deleted_count.bit_count():
             return True
         return False
+
+    def find(self, query: dict) -> List[BaseModel]:
+        result = self.get_collection().find(query)
+        items = []
+        print(result)
+        for item in result:
+            item['id'] = str(item['_id'])
+            item = self.embed(item)
+            items.append(self.model(**item))
+
+        return items

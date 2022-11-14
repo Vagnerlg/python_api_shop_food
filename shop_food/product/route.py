@@ -1,5 +1,6 @@
 from flask import Flask
 from shop_food.infra.http.base_controller import BaseController
+from .controller.product_controller import ProductController
 from .repository.category_repository import CategoryRepository
 from .repository.product_repository import ProductRepository
 
@@ -33,3 +34,11 @@ def map_route(app: Flask) -> None:
 
     route_crud('product', product_controller)
     route_crud('category', category_controller)
+
+    app.add_url_rule(
+        '/product/category/<id_cat>',
+        endpoint='category_all_product.update',
+        view_func=ProductController(
+            repository=ProductRepository()
+        ).all_products
+    )
