@@ -1,11 +1,13 @@
+import os
+
 from pydantic import BaseModel
 from pymongo import MongoClient
-import os
+
 
 class DB(BaseModel):
     collection: str = ''
 
-    def get_collection(self):
+    def get_collection(self, collection: str = None):
         client = MongoClient(
             os.getenv('DB_DRIVE') + '://' +
             os.getenv('DB_USER') + ':' +
@@ -14,4 +16,7 @@ class DB(BaseModel):
             os.getenv('DB_PORT') + '/'
         )
 
-        return client[os.getenv('DB_NAME')][self.collection]
+        if None == collection:
+            return client[os.getenv('DB_NAME')][self.collection]
+
+        return client[os.getenv('DB_NAME')][collection]

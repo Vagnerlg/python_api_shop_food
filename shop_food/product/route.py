@@ -1,10 +1,35 @@
 from flask import Flask
-from .controller import products, product, add_product, update_product, delete_product
+from shop_food.infra.http.base_controller import BaseController
+from .repository.category_repository import CategoryRepository
+from .repository.product_repository import ProductRepository
 
 
 def map_route(app: Flask) -> None:
-    app.add_url_rule('/product', view_func=products)
-    app.add_url_rule('/product/<id_prod>', view_func=product)
-    app.add_url_rule('/product', view_func=add_product, methods=['POST'])
-    app.add_url_rule('/product/<id_prod>', view_func=update_product, methods=['POST', 'PUT'])
-    app.add_url_rule('/product/<id_prod>', view_func=delete_product, methods=['DELETE'])
+
+    def route_crud(model_name: str, controller: BaseController) -> None:
+        app.add_url_rule('/' + model_name, endpoint=model_name + '.items', view_func=controller.items)
+        app.add_url_rule('/' + model_name, endpoint=model_name + '.add', view_func=controller.add, methods=['POST'])
+        app.add_url_rule('/' + model_name + '/<id_model>', endpoint=model_name + '.item', view_func=controller.item)
+        app.add_url_rule(
+            '/' + model_name + '/<id_model>',
+            endpoint=model_name + '.update',
+            view_func=controller.update,
+            methods=['POST', 'PUT']
+        )
+        app.add_url_rule(
+            '/' + model_name + '/<id_model>',
+            endpoint=model_name + '.delete',
+            view_func=controller.delete,
+            methods=['DELETE']
+        )
+
+    product_controller = BaseController(
+        repository=ProductRepository()
+    )
+
+    category_controller = BaseController(
+        repository=CategoryRepository()
+    )
+
+    route_crud('product', product_controller)
+    route_crud('category', category_controller)
