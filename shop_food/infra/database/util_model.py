@@ -7,7 +7,8 @@ from shop_food.infra.database.relation import Relation
 
 
 class UtilModel(DB):
-    relations: List[Relation] = []
+    relation_one: List[Relation] = []
+    relation_many: List[Relation] = []
 
     def set_date(self, model: BaseModel) -> None:
         if None == model.created_at:
@@ -15,15 +16,26 @@ class UtilModel(DB):
         model.updated_at = datetime.now()
 
     def embed(self, model_dict: dict) -> dict:
-        for relation in self.relations:
+        for relation in self.relation_one:
             model_dict[relation.model] = relation.repository().find_by_id(
                 model_dict[relation.field]).dict()
+
+        for relation in self.relation_many:
+            model_dict[relation.model] = relation.repository().find({
+                '_id': {
+                    '$in': model_dict[relation.field]
+                }
+            }).dict()
 
         return model_dict
 
     def relations_obj(self, model: BaseModel) -> dict:
         model_dict = model.dict()
-        for relation in self.relations:
+        for relation in self.relation_one:
+            model_dict[relation.field] = model_dict[relation.model][relation.model_id]
+            del model_dict[relation.model]
+
+        for relation in self.relation_many:
             model_dict[relation.field] = model_dict[relation.model][relation.model_id]
             del model_dict[relation.model]
 

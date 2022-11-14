@@ -9,7 +9,7 @@ from shop_food.product.repository.category_repository import CategoryRepository
 class ProductRepository(AbstractRepository):
     collection: str = 'products'
     model = Product
-    relations: List[Relation] = [
+    relation_one: List[Relation] = [
         Relation(field='category_id', model='category', repository=CategoryRepository)
     ]
 
