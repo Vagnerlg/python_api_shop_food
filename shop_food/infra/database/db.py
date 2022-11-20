@@ -1,22 +1,20 @@
-import os
-
-from pydantic import BaseModel
 from pymongo import MongoClient
+from pymongo.database import Database
 
 
-class DB(BaseModel):
-    collection: str = ''
+class DB:
+    client_database: Database
 
-    def get_collection(self, collection: str = None):
+    def __init__(self, db_config: dict):
+        print('vagner')
         client = MongoClient(
-            os.getenv('DB_DRIVE') + '://' +
-            os.getenv('DB_USER') + ':' +
-            os.getenv('DB_PASSWORD') + '@' +
-            os.getenv('DB_URL') + ':' +
-            os.getenv('DB_PORT') + '/'
+            'mongodb://' +
+            db_config['user'] + ':' +
+            db_config['password'] + '@' +
+            db_config['url'] + ':' +
+            db_config['port'] + '/'
         )
+        self.client_database = client[db_config['name']]
 
-        if None == collection:
-            return client[os.getenv('DB_NAME')][self.collection]
-
-        return client[os.getenv('DB_NAME')][collection]
+    def get_collection(self, collection: str):
+        return self.client_database[collection]

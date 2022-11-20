@@ -1,6 +1,10 @@
 from enum import Enum
+from typing import Optional
 
-from pydantic import BaseModel, PositiveInt
+from pydantic import BaseModel, PositiveInt, root_validator
+
+from shop_food.product.model.product import Product
+from shop_food.product.repository.product_repository import ProductRepository
 
 
 class TypesUser(str, Enum):
@@ -16,5 +20,17 @@ class User(BaseModel):
 
 class AddOrderItem(BaseModel):
     product_id: str
+    product: Optional[Product]
     user: User
-    quantity: PositiveInt
+    quantity: PositiveInt = 1
+
+    @root_validator
+    def root_validate(cls, values):
+        product = ProductRepository().find_by_id(str(values.get('product_id')))
+
+        if product is None:
+            raise ValueError('product not found')
+
+        values['product'] = product
+
+        return values

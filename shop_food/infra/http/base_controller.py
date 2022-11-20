@@ -1,16 +1,14 @@
 from shop_food.infra.database.abstract_repository import AbstractRepository
-from shop_food.product.model.product import Product
-from shop_food.product.repository.product_repository import ProductRepository
 from flask import request
-from pydantic import ValidationError, BaseModel as BaseModelPydantic
+from pydantic import ValidationError
 from shop_food.infra.http.response import response_errors, response_success
 
-repository = ProductRepository
-model = Product
 
-
-class BaseController(BaseModelPydantic):
+class BaseController:
     repository: AbstractRepository
+
+    def __init__(self, repository: AbstractRepository):
+        self.repository = repository
 
     def items(self):
         result = self.repository.all()
@@ -27,7 +25,7 @@ class BaseController(BaseModelPydantic):
 
     def add(self):
         try:
-            item_model = model(** request.get_json())
+            item_model = self.repository.model(** request.get_json())
             result = self.repository.add(item_model)
             return response_success(result.dict())
         except ValidationError as e:
@@ -35,8 +33,13 @@ class BaseController(BaseModelPydantic):
 
     def update(self, id_model: str):
         try:
-            item_model = model(** request.get_json())
+            item_model = self.repository.model(** request.get_json())
             result = self.repository.update(id_model, item_model)
+            if not result:
+                return response_errors({
+                    'product': 'not_found'
+                })
+
             return response_success(result.dict())
         except ValidationError as e:
             return response_errors(e.errors())

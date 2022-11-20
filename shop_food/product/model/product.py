@@ -12,4 +12,3 @@ class Product(BaseModel):
     ingredients: List[str] = []
     category: Category
     price: PositiveInt
-

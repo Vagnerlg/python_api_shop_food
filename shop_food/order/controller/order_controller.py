@@ -14,6 +14,7 @@ class OrderController(BaseController):
     def add_item(self):
         try:
             item = AddOrderItem(**request.get_json())
+            self.repository.add_item(item)
             return response_success(item.dict())
         except ValidationError as e:
             return response_errors(e.errors())

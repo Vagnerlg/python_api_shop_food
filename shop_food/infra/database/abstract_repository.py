@@ -1,44 +1,54 @@
 from typing import Optional, List
+
 from bson import ObjectId
+from injector import inject
+
 from shop_food.infra.database.base_model import BaseModel
-from shop_food.infra.database.util_model import UtilModel
+from shop_food.infra.database.db import DB
+from shop_food.infra.database.util.parse import prepare_obj, prepare_model, merge
 
 
-class AbstractRepository(UtilModel):
+class AbstractRepository:
     model = BaseModel
+    collection: str = ''
+
+    @inject
+    def __init__(self, db: DB):
+        self.db = db
+
+    def get_db(self):
+        return self.db.get_collection(self.collection)
 
     def all(self) -> List[BaseModel]:
         items = []
-        for item in self.get_collection().find():
-            item['id'] = str(item['_id'])
-            item = self.embed(item)
-            items.append(self.model(**item))
+        for item in self.get_db().find():
+            items.append(self.model(**prepare_model(item)))
 
         return items
 
     def find_by_id(self, id_model: str) -> Optional[BaseModel]:
-        result = self.get_collection().find_one({
+        result = self.get_db().find_one({
             '_id': ObjectId(id_model)
         })
 
-        if None == result:
+        if not result:
             return None
 
-        result['id'] = str(result['_id'])
-        result = self.embed(result)
-        return self.model(**result)
+        return self.model(**prepare_model(result))
 
     def add(self, model: BaseModel) -> BaseModel:
-        self.set_date(model)
-        prod_dict = self.relations_obj(model)
-        result = self.get_collection().insert_one(prod_dict)
-        model.id = str(result.inserted_id)
+        item_dict = prepare_obj(model.dict())
+        result = self.get_db().insert_one(item_dict)
 
-        return model
+        return self.find_by_id(str(result.inserted_id))
 
-    def update(self, id_model: str, prod: BaseModel) -> BaseModel:
-        prod_dict = self.merge(self.find_by_id(id_model), prod)
-        self.get_collection().update_one({
+    def update(self, id_model: str, prod: BaseModel) -> Optional[BaseModel]:
+        actual = self.find_by_id(id_model)
+        if not actual:
+            return None
+
+        prod_dict = merge(prepare_obj(actual.dict()), prepare_obj(prod.dict()))
+        self.get_db().update_one({
             '_id': ObjectId(id_model)
         }, {
             '$set': prod_dict
@@ -47,7 +57,7 @@ class AbstractRepository(UtilModel):
         return self.find_by_id(id_model)
 
     def delete(self, id_model: str) -> bool:
-        result = self.get_collection().delete_one({
+        result = self.get_db().delete_one({
             '_id': ObjectId(id_model)
         })
         if 0 < result.deleted_count.bit_count():
@@ -55,12 +65,9 @@ class AbstractRepository(UtilModel):
         return False
 
     def find(self, query: dict) -> List[BaseModel]:
-        result = self.get_collection().find(query)
+        result = self.get_db().find(query)
         items = []
-        print(result)
         for item in result:
-            item['id'] = str(item['_id'])
-            item = self.embed(item)
-            items.append(self.model(**item))
+            items.append(self.model(** prepare_model(item)))
 
         return items
