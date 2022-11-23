@@ -16,9 +16,10 @@ class BaseController:
 
     def item(self, id_model: str):
         result = self.repository.find_by_id(id_model)
-        if None == result:
+
+        if not result:
             return response_errors({
-                    'product': 'not_found'
+                    self.repository.model.__name__.lower(): 'not_found'
                 })
 
         return response_success(result.dict())
@@ -37,7 +38,7 @@ class BaseController:
             result = self.repository.update(id_model, item_model)
             if not result:
                 return response_errors({
-                    'product': 'not_found'
+                    self.repository.model.__name__.lower(): 'not_found'
                 })
 
             return response_success(result.dict())

@@ -1,16 +1,21 @@
-import os
+from shop_food.product.repository.category_repository import CategoryRepository
+from shop_food.product.repository.product_repository import ProductRepository
 
 
 class DevConfig(object):
-    ENV = os.getenv('ENV')
+    APP_NAME = 'shop_food'
     DATABASE = {
-        'default': os.getenv('DB_DRIVE'),
+        'default': 'mongodb',
         'mongodb': {
             'drive': 'mongodb',
-            'user': os.getenv('DB_USER'),
-            'password': os.getenv('DB_PASSWORD'),
-            'url': os.getenv('DB_URL'),
-            'port': os.getenv('DB_PORT'),
-            'name': os.getenv('DB_NAME')
+            'user': 'root',
+            'password': 'example',
+            'url': 'localhost',
+            'port': 27017,
+            'name': 'shop-food'
         }
+    }
+    REPOSITORIES = {
+        'category': CategoryRepository,
+        'product': ProductRepository
     }
