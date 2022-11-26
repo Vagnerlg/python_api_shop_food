@@ -1,8 +1,9 @@
 from flask import Flask
 from flask_injector import FlaskInjector, request
 
-from shop_food.infra.database.db import DB
-from shop_food.infra.database.util.parse import Transform
+from shop_food.contracts.interface_db import InterfaceDB
+from shop_food.infra.database.mongo.db import DB
+from shop_food.infra.database.mongo.parse import Transform
 
 
 def boot_injector(app: Flask):
@@ -10,11 +11,10 @@ def boot_injector(app: Flask):
     def configure(binder):
         config_db = app.config['DATABASE']['mongodb']
         db = DB(config_db)
-        # config_collection = app.config['REPOSITORIES']
         transform = Transform()
 
         binder.bind(
-            DB,
+            InterfaceDB,
             to=db,
             scope=request,
         )

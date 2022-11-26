@@ -2,8 +2,9 @@ from datetime import datetime
 import pytest
 
 from shop_food.app import load_app
-from shop_food.infra.database.util.parse import Transform
 from bson import ObjectId
+
+from shop_food.infra.database.mongo.parse import Transform
 
 
 @pytest.fixture

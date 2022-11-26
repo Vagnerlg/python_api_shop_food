@@ -1,9 +1,9 @@
-from shop_food.infra.database.base_model import BaseModel
+from shop_food.contracts.abstract_model import AbstractModel
 from pydantic import root_validator
 from typing import Optional
 
 
-class User(BaseModel):
+class User(AbstractModel):
     phone: Optional[str]
     cpf: Optional[str]
     email: Optional[str]

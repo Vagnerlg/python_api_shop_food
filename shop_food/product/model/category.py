@@ -1,5 +1,5 @@
-from shop_food.infra.database.base_model import BaseModel
+from shop_food.contracts.abstract_model import AbstractModel
 
 
-class Category(BaseModel):
+class Category(AbstractModel):
     name: str

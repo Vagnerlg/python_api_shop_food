@@ -1,8 +1,8 @@
-from shop_food.infra.database.base_model import BaseModel
+from shop_food.contracts.abstract_model import AbstractModel
 from typing import Optional
 
 
-class Address(BaseModel):
+class Address(AbstractModel):
     street: str
     number: str
     city: str

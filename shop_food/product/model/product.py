@@ -1,10 +1,10 @@
 from typing import List
 from pydantic import PositiveInt
-from shop_food.infra.database.base_model import BaseModel
+from shop_food.contracts.abstract_model import AbstractModel
 from shop_food.product.model.category import Category
 
 
-class Product(BaseModel):
+class Product(AbstractModel):
     title: str
     short_description: str
     description: str

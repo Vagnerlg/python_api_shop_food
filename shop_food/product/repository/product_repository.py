@@ -1,6 +1,6 @@
 from pydantic.error_wrappers import ValidationError, ErrorWrapper
 from shop_food.infra.database.abstract_repository import AbstractRepository
-from shop_food.infra.database.base_model import BaseModel
+from shop_food.contracts.abstract_model import AbstractModel
 from shop_food.product.model.product import Product
 from typing import List
 
@@ -11,7 +11,7 @@ class ProductRepository(AbstractRepository):
     collection: str = 'products'
     model = Product
 
-    def all_products_by_category(self, id_cat: str) -> List[BaseModel]:
+    def all_products_by_category(self, id_cat: str) -> List[AbstractModel]:
         return self.find({
             'category_id': id_cat
         })

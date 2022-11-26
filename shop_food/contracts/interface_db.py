@@ -1,0 +1,19 @@
+class InterfaceDB:
+
+    def __get_collection(self, collection: str):
+        ...
+
+    def find(self, collection: str, query: dict = {}) -> list[dict]:
+        ...
+
+    def find_one(self, collection: str, id_model: str) -> dict | None:
+        ...
+
+    def insert_one(self, collection: str, data: dict) -> str | None:
+        ...
+
+    def update_one(self, collection: str, id: str, data: dict) -> None:
+        ...
+
+    def delete_one(self, collection: str, id: str) -> bool:
+        ...
