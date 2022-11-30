@@ -3,6 +3,7 @@ from typing import Optional
 
 from pydantic import BaseModel, PositiveInt, root_validator
 
+from shop_food.injector import boot_injector
 from shop_food.product.model.product import Product
 from shop_food.product.repository.product_repository import ProductRepository
 
@@ -26,7 +27,11 @@ class AddOrderItem(BaseModel):
 
     @root_validator
     def root_validate(cls, values):
-        product = ProductRepository().find_by_id(str(values.get('product_id')))
+        product_id = values.get('product_id')
+        if product_id is None:
+            raise ValueError('product not found')
+
+        product = boot_injector().get(ProductRepository).find_by_id(str(product_id))
 
         if product is None:
             raise ValueError('product not found')

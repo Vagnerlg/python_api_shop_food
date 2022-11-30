@@ -1,5 +1,5 @@
 from shop_food.infra.database.abstract_repository import AbstractRepository
-from shop_food.infra.http.request.add_order_item import AddOrderItem
+from shop_food.infra.http.form_request.add_order_item import AddOrderItem
 from shop_food.order.model.order import Order
 from shop_food.product.repository.product_repository import ProductRepository
 
