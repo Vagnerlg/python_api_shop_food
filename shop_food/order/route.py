@@ -12,7 +12,11 @@ def map_route(flask_injector: FlaskInjector) -> None:
         repository=injector.get(OrderRepository)
     )
 
-    app.add_url_rule('/order', endpoint='order.items', view_func=order_controller.items)
+    app.add_url_rule(
+        '/order',
+        endpoint='order.items',
+        view_func=order_controller.items
+    )
 
     app.add_url_rule(
         '/order/add_item',

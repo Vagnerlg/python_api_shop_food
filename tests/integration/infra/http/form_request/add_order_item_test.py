@@ -1,6 +1,7 @@
+import pytest
 from pydantic.error_wrappers import ValidationError
 from shop_food.infra.http.form_request.add_order_item import AddOrderItem
-from tests.util.database import *
+from shop_food.product.model.product import Product
 
 
 def test_form_add_order_item(product):

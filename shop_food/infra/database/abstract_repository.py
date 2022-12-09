@@ -38,7 +38,11 @@ class AbstractRepository:
 
         return self.find_by_id(result)
 
-    def update(self, id_model: str, prod: AbstractModel) -> Optional[AbstractModel]:
+    def update(
+            self,
+            id_model: str,
+            prod: AbstractModel
+    ) -> Optional[AbstractModel]:
         actual = self.find_by_id(id_model)
         if not actual:
             return None

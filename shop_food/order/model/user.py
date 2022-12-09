@@ -10,7 +10,10 @@ class User(AbstractModel):
 
     @root_validator
     def check_passwords_match(cls, values):
-        phone, cpf, email = values.get('phone'), values.get('cpf'), values.get('email')
+        phone = values.get('phone')
+        cpf = values.get('cpf')
+        email = values.get('email')
+
         if phone is None and cpf is None and email is None:
             raise ValueError('user id not null phone, cpf and email')
         return values

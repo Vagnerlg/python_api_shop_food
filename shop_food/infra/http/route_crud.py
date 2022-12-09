@@ -3,7 +3,11 @@ from flask import Flask
 from shop_food.infra.http.base_controller import BaseController
 
 
-def route_crud(app: Flask, model_name: str, controller: BaseController) -> None:
+def route_crud(
+        app: Flask,
+        model_name: str,
+        controller: BaseController
+) -> None:
 
     app.add_url_rule(
         '/' + model_name,

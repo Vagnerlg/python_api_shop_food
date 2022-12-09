@@ -40,7 +40,9 @@ class OrderRepository(AbstractRepository):
 
         items_obj = []
         for item in items:
-            product = ProductRepository(self.db, self.transform).find_by_id(item.get('product_id'))
+            product = ProductRepository(
+                self.db, self.transform
+            ).find_by_id(item.get('product_id'))
             if not product:
                 item['product'] = {
                     'title': 'not found',

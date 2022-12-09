@@ -4,7 +4,8 @@ from shop_food.contracts.abstract_model import AbstractModel
 from shop_food.product.model.product import Product
 from typing import List
 
-from shop_food.product.repository.category_repository import CategoryRepository
+from shop_food.product.repository.category_repository \
+    import CategoryRepository
 
 
 class ProductRepository(AbstractRepository):
@@ -18,7 +19,10 @@ class ProductRepository(AbstractRepository):
 
     def relations(self, model: dict) -> dict:
         category_id = model.get('category_id')
-        category = CategoryRepository(self.db, self.transform).find_by_id(category_id)
+        category = CategoryRepository(
+            self.db,
+            self.transform
+        ).find_by_id(category_id)
 
         if not category:
             category = {
@@ -33,10 +37,15 @@ class ProductRepository(AbstractRepository):
 
     def validation_relations(self, model) -> None:
         category_id = model.get('category_id')
-        if not category_id or not CategoryRepository(self.db, self.transform).find_by_id(category_id):
+        if not category_id or not CategoryRepository(
+                self.db, self.transform
+        ).find_by_id(category_id):
             raise ValidationError(
                 model=self.model,
                 errors=[
-                    ErrorWrapper(loc='category', exc=Exception(f'category {category_id} not found'))
+                    ErrorWrapper(
+                        loc='category',
+                        exc=Exception(f'category {category_id} not found')
+                    )
                 ]
             )

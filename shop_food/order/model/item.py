@@ -7,4 +7,3 @@ from shop_food.product.model.product import Product
 class Item(AbstractModel):
     product: Product
     quantity: PositiveInt
-

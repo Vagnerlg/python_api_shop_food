@@ -9,7 +9,6 @@ from shop_food.contracts.interface_db import InterfaceDB
 from shop_food.infra.database.mongo.db import DB
 from shop_food.infra.database.mongo.parse import Transform
 from shop_food.integration_config import IntegrationConfig
-from tests.unit.infra.database.mongo.db import DB as MockDB
 
 
 def configure(binder):
@@ -37,6 +36,7 @@ def configure(binder):
 
 def boot_app(app: Flask) -> FlaskInjector:
     return FlaskInjector(app=app, modules=[configure])
+
 
 def boot_injector() -> Injector:
     return Injector(modules=[configure])

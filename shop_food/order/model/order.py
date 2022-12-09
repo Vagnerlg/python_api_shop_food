@@ -12,4 +12,3 @@ class Order(AbstractModel):
     items: List[Item] = []
     status: Status
     address: Optional[Address]
-

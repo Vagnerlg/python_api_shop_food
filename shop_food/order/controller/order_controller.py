@@ -18,4 +18,3 @@ class OrderController(BaseController):
             return response_success(item.dict())
         except ValidationError as e:
             return response_errors(e.errors())
-

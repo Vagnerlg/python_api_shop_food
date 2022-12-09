@@ -31,7 +31,9 @@ class AddOrderItem(BaseModel):
         if product_id is None:
             raise ValueError('product not found')
 
-        product = boot_injector().get(ProductRepository).find_by_id(str(product_id))
+        product = boot_injector().get(
+            ProductRepository
+        ).find_by_id(str(product_id))
 
         if product is None:
             raise ValueError('product not found')
