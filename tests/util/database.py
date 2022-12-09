@@ -25,25 +25,25 @@ def clear_database():
 
 
 @pytest.fixture()
-def categoryRepository():
+def category_repository():
     return boot_injector().get(CategoryRepository)
 
 
 @pytest.fixture()
-def category(categoryRepository):
-    return categoryRepository.add(Category(**{
+def category(category_repository):
+    return category_repository.add(Category(**{
         'name': 'Pizza'
     }))
 
 
 @pytest.fixture()
-def productRepository():
+def product_repository():
     return boot_injector().get(ProductRepository)
 
 
 @pytest.fixture()
-def product(productRepository, category):
-    return productRepository.add(Product(**{
+def product(product_repository, category):
+    return product_repository.add(Product(**{
         'title': 'Pizza Mussarela',
         'short_description': 'Saborosa',
         'description': 'imperdivel',

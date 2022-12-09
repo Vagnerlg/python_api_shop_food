@@ -2,27 +2,20 @@ import pytest
 from pydantic.error_wrappers import ValidationError
 
 from shop_food.order.model.address import Address
-from shop_food.order.model.item import Item
 
 
 def test_address():
-    pass
-    # address = Address(**{
-    #     'product': {
-    #         'title': 'Titulo',
-    #         'short_description': 'produto',
-    #         'description': 'Produto com desconto',
-    #         'price': 100,
-    #         'category': {
-    #             'name': 'categoria'
-    #         }
-    #     },
-    #     'quantity': 1
-    # })
-    #
-    # assert isinstance(address, Address)
-    # assert address.created_at is not None
-    # assert address.updated_at is not None
+    address = Address(**{
+        'street': 'Av Paulista',
+        'number': '1000',
+        'city': 'São Paulo',
+        'state': 'SP',
+        'district': 'Centro'
+    })
+
+    assert isinstance(address, Address)
+    assert address.created_at is not None
+    assert address.updated_at is not None
 
 
 def test_address_error():
@@ -58,4 +51,3 @@ def test_address_error():
             'type': 'value_error.missing'
         }
     ]
-

@@ -9,6 +9,7 @@ class DB(InterfaceDB):
         self.data = data
 
     def __get_expected(self) -> dict:
+        print(self.data)
         result = self.data[self.index]
         self.index = self.index + 1
 

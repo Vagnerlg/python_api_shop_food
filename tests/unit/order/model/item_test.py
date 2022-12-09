@@ -41,4 +41,3 @@ def test_user_error():
             'type': 'value_error.missing'
         }
     ]
-

@@ -100,7 +100,10 @@ def test_merge_full(transform: Transform) -> None:
     assert expected == result
 
 
-def test_prepare_obj(transform: Transform, dict_object: dict, dict_database: dict):
+def test_prepare_obj(
+        transform: Transform,
+        dict_object: dict,
+        dict_database: dict):
     result = transform.prepare_obj(dict_object)
 
     assert result == dict_database
