@@ -33,6 +33,7 @@ class Transform:
                     if isinstance(item, dict):
                         items.append(self.prepare_model(item))
                         continue
+                    items.append(item)
                 result[key] = items
                 continue
 
@@ -48,6 +49,7 @@ class Transform:
     def prepare_obj(self, original: dict) -> dict:
         for key in original.copy():
             if isinstance(original[key], dict):
+                # corrigir esta interdependecia
                 if key in ['category', 'product']:
                     original[f'{key}_id'] = original[key]['id']
                     del original[key]
@@ -58,5 +60,7 @@ class Transform:
                 for item in original[key]:
                     if isinstance(item, dict):
                         items.append(self.prepare_obj(item))
+                    else:
+                        items.append(item)
                 original[key] = items
         return original

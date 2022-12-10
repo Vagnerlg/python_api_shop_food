@@ -145,5 +145,5 @@ def test_prepare_model(transform: Transform):
             }
         ]
     }
-
+    print(result.get('items'))
     assert expected == result

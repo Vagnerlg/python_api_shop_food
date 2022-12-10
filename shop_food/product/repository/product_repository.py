@@ -1,4 +1,6 @@
 from pydantic.error_wrappers import ValidationError, ErrorWrapper
+
+import shop_food
 from shop_food.infra.database.abstract_repository import AbstractRepository
 from shop_food.contracts.abstract_model import AbstractModel
 from shop_food.product.model.product import Product
@@ -19,9 +21,8 @@ class ProductRepository(AbstractRepository):
 
     def relations(self, model: dict) -> dict:
         category_id = model.get('category_id')
-        category = CategoryRepository(
-            self.db,
-            self.transform
+        category = shop_food.injector.boot_injector().get(
+            CategoryRepository
         ).find_by_id(category_id)
 
         if not category:
@@ -36,9 +37,12 @@ class ProductRepository(AbstractRepository):
         return self.transform.prepare_model(model)
 
     def validation_relations(self, model) -> None:
+        if model.get('category'):
+            return None
+
         category_id = model.get('category_id')
-        if not category_id or not CategoryRepository(
-                self.db, self.transform
+        if not category_id or not shop_food.injector.boot_injector().get(
+                CategoryRepository
         ).find_by_id(category_id):
             raise ValidationError(
                 model=self.model,
