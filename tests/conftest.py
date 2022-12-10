@@ -1,3 +1,5 @@
+import os
+
 import pytest
 from pymongo import MongoClient
 
@@ -21,12 +23,17 @@ def clear_database():
         str(db_config['port']) + '/'
     )
     client.drop_database(db_config['name'])
-    print('clear_database')
 
 
 @pytest.fixture()
-def category_repository():
-    return boot_injector().get(CategoryRepository)
+def boot():
+    os.environ['ENV'] = 'integration_testing'
+    return boot_injector()
+
+
+@pytest.fixture()
+def category_repository(boot):
+    return boot.get(CategoryRepository)
 
 
 @pytest.fixture()
@@ -37,8 +44,8 @@ def category(category_repository):
 
 
 @pytest.fixture()
-def product_repository():
-    return boot_injector().get(ProductRepository)
+def product_repository(boot):
+    return boot.get(ProductRepository)
 
 
 @pytest.fixture()
