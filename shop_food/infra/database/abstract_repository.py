@@ -67,6 +67,13 @@ class AbstractRepository:
 
         return items
 
+    def find_one(self, query: dict) -> AbstractModel | None:
+        result = self.db.find(self.collection, query)
+        if len(result) == 0:
+            return None
+
+        return self.model(**self.relations(result[0]))
+
     def relations(self, model: dict) -> dict:
         return self.transform.prepare_model(model)
 

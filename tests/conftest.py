@@ -3,8 +3,10 @@ import os
 import pytest
 from pymongo import MongoClient
 
+from shop_food.infra.http.form_request.add_order_item import AddOrderItem
 from shop_food.injector import boot_injector
 from shop_food.integration_config import IntegrationConfig
+from shop_food.order.repository.order_repository import OrderRepository
 from shop_food.product.model.category import Category
 from shop_food.product.model.product import Product
 from shop_food.product.repository.category_repository import CategoryRepository
@@ -57,3 +59,21 @@ def product(product_repository, category):
         'price': 1000,
         'category': category.dict()
     }))
+
+
+@pytest.fixture()
+def order_repository(boot):
+    return boot.get(OrderRepository)
+
+
+@pytest.fixture()
+def order(order_repository, product):
+    form_order = AddOrderItem(
+        product_id=product.id,
+        user={
+            'type': 'email',
+            'value': 'email@email.com'
+        }
+    )
+
+    return order_repository.add_item(form_order)

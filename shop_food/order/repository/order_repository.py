@@ -1,5 +1,6 @@
 from shop_food.infra.database.abstract_repository import AbstractRepository
 from shop_food.infra.http.form_request.add_order_item import AddOrderItem
+from shop_food.order.model.item import Item
 from shop_food.order.model.order import Order
 from shop_food.product.repository.product_repository import ProductRepository
 
@@ -10,6 +11,17 @@ class OrderRepository(AbstractRepository):
 
     def add_item(self, form_item: AddOrderItem):
         add_dict = form_item.dict()
+        order = self.find_one({
+            'user.' + add_dict['user']['type'].value: add_dict['user']['value']
+        })
+        print(order)
+        if order:
+            order.items.append(Item(
+                product=add_dict['product'],
+                quantity=add_dict['quantity']
+            ))
+
+            return self.update(order.id, order)
 
         order = Order(**{
             'user': {
@@ -24,13 +36,7 @@ class OrderRepository(AbstractRepository):
             'status': 'created'
         })
 
-        payload = self.transform.prepare_obj(order.dict())
-        result = self.get_db().insert_one(payload)
-
-        # busca por pedido com status CREATED, se não encontra cria um
-        # adiciona o produto e sua quantidade
-        # retorna o Pedido
-        return self.find_by_id(str(result.inserted_id))
+        return self.add(order)
 
     def relations(self, model: dict) -> dict:
         items = model.get('items')
