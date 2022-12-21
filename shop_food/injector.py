@@ -1,22 +1,17 @@
-import os
-
 from flask import Flask
 from flask_injector import FlaskInjector, singleton
 from injector import Injector
 
-from shop_food.dev_config import DevConfig
+from shop_food.config import Config
 from shop_food.contracts.interface_db import InterfaceDB
 from shop_food.infra.database.mongo.db import DB
 from shop_food.infra.database.mongo.parse import Transform
-from shop_food.integration_config import IntegrationConfig
 
 
 def configure(binder):
-    config = DevConfig()
-    if os.getenv('ENV') == 'integration_testing':
-        config = IntegrationConfig()
+    config = Config()
 
-    config_db = config.DATABASE.get('mongodb')
+    config_db = config.database().get('mongodb')
     db = DB(config_db)
 
     transform = Transform()

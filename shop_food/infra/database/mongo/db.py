@@ -10,11 +10,11 @@ class DB(InterfaceDB):
 
     def __init__(self, db_config: dict):
         client = MongoClient(
-            'mongodb://' +
+            db_config['drive'] + '://' +
             db_config['user'] + ':' +
             db_config['password'] + '@' +
-            db_config['url'] + ':' +
-            str(db_config['port']) + '/'
+            db_config['url'],
+            port=db_config['port']
         )
         self.client_database = client[db_config['name']]
 
