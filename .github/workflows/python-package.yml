@@ -14,15 +14,14 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v3
-    - name: Set up Python 3.11.1
+    - name: Set up Python 3.10.9
       uses: actions/setup-python@v3
       with:
-        python-version: 3.11.1
+        python-version: 3.10.9
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        python -m pip install flake8 poetry
-        poetry install
+        python -m pip install -r requirements.txt
     - name: Set up Mongo 5.0
       uses: supercharge/mongodb-github-action@1.8.0
       with:
@@ -32,7 +31,7 @@ jobs:
         mongodb-db: shop-food
     - name: Lint with flake8
       run: |
-        poetry run flake8 shop_food tests
+        flake8 shop_food tests
     - name: Test with pytest
       run: |
-        poetry run pytest tests
+        pytest tests
